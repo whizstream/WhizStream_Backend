@@ -10,6 +10,9 @@ module.exports = sequelize.define(
       primaryKey: true,
       type: Sequelize.INTEGER,
     },
+    googleSub: {
+      type: Sequelize.STRING,
+    },
     username: {
       type: Sequelize.STRING,
     },
