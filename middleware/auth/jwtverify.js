@@ -5,13 +5,13 @@ const requireAuth = (req, res, next) => {
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
       if (err) {
-        res.redirect("/api/logout");
+        res.redirect("/api/auth/logout");
       } else {
         next();
       }
     });
   } else {
-    res.redirect("/api/logout");
+    res.redirect("/api/auth/logout");
   }
 };
 

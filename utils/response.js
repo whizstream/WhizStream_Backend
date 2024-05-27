@@ -13,6 +13,13 @@ const response = (res, statusCode, message, data) => {
       message,
       data,
     });
+  } else if (statusCode === 401) {
+    return res.json({
+      status: "Unauthorized",
+      statusCode: 401,
+      message,
+      data,
+    });
   }
 };
 
