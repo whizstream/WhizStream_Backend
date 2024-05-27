@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const generateUsername = (firstName, lastName) => {
   const time = new Date().getTime();
   const last3Digits = time.toString().slice(-3);
-  const username = `${firstName.substring(0, 2)}${firstName.substring(
+  const username = `${firstName.substring(0, 2)}${lastName.substring(
     0,
     2
   )}${last3Digits}`;
@@ -26,6 +26,7 @@ const authGoogleSuccess = async (req, res) => {
 
     // check that user exists
     const userExists = await userModel.findOne({ googleSub: data.googleSub });
+    console.log(userExists);
     if (!userExists) {
       const newUser = new userModel(data);
       await newUser.save();
