@@ -2,31 +2,34 @@ const response = require("../../utils/response");
 const userModel = require("../../db/models/user");
 const jwt = require("jsonwebtoken");
 
-const generateUsername = (firstName, lastName) => {
+const generateUsername = (email) => {
   const time = new Date().getTime();
   const last3Digits = time.toString().slice(-3);
-  const username = `${firstName.substring(0, 2)}${lastName.substring(
-    0,
-    2
-  )}${last3Digits}`;
-  return username;
+  email = email.split("@")[0];
+  email = email.replace(/[^a-zA-Z0-9]/g, "");
+  email = email.slice(0, 5);
+  return `${email}${last3Digits}`;
 };
 
 const authGoogleSuccess = async (req, res) => {
   try {
     const user = req.user;
+    console.log(req.user);
+
     const data = {
       googleSub: user.id,
       firstName: user.name.givenName,
       lastName: user.name.familyName,
       email: user.emails[0].value,
       profilePic: user.photos[0].value,
-      username: generateUsername(user.name.givenName, user.name.familyName),
+      username: generateUsername(user.emails[0].value),
     };
 
+    let googleSub = data.googleSub;
+
     // check that user exists
-    const userExists = await userModel.findOne({ googleSub: data.googleSub });
-    console.log(userExists);
+    const userExists = await userModel.findOne({ where: { googleSub } });
+    console.log("hmmm->>>>>", userExists);
     if (!userExists) {
       const newUser = new userModel(data);
       await newUser.save();
