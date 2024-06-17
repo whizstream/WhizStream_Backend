@@ -19,13 +19,12 @@ route.get("/login/failed", (req, res) => {
 
 route.get("/google", passport.authenticate("google", ["profile", "email"]));
 
-route.get(
-  "/google/callback",
+route.get("/google/callback", (req, res, next) => {
   passport.authenticate("google", {
-    successRedirect: process.env.FRONTEND_URL,
+    successRedirect: `${process.env.FRONTEND_URL}/google`,
     failureRedirect: "/login/failed",
-  })
-);
+  })(req, res, next);
+});
 
 route.get("/logout", (req, res) => {
   res.json({

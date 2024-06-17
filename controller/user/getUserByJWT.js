@@ -11,7 +11,6 @@ const getUserByJWT = async (req, res) => {
       return response(res, 401, "Unauthorized");
     }
     const data = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(data);
     const user = await userModel.findOne({
       where: { id: data.id },
     });
