@@ -1,5 +1,11 @@
-// load env variables
-require("dotenv").config();
+const dotenv = require("dotenv");
+
+// Load environment variables based on NODE_ENV
+if (process.env.NODE_ENV === "production") {
+  dotenv.config({ path: ".env.production" });
+} else {
+  dotenv.config({ path: ".env.development" });
+}
 
 // import required modules
 const cors = require("cors");
@@ -25,7 +31,11 @@ app.use(passport.session());
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: [
+      "https://whizstream.thenanjay.com",
+      "http://youtubemini-build.s3-website.ca-central-1.amazonaws.com",
+      "http://localhost:3000",
+    ],
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })

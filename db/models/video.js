@@ -1,9 +1,9 @@
 "use strict";
 const { Sequelize } = require("sequelize");
-const Video = require("./video.js");
+
 const sequelize = require("../../config/database");
-const user = sequelize.define(
-  "Users",
+const video = sequelize.define(
+  "Videos",
   {
     id: {
       allowNull: false,
@@ -11,23 +11,35 @@ const user = sequelize.define(
       primaryKey: true,
       type: Sequelize.INTEGER,
     },
-    googleSub: {
+    VideoID: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    UserID: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
+    },
+    Title: {
       type: Sequelize.STRING,
     },
-    username: {
+    Description: {
+      type: Sequelize.TEXT,
+    },
+    ThumbnailPath: {
       type: Sequelize.STRING,
     },
-    email: {
-      type: Sequelize.STRING,
+    Views: {
+      type: Sequelize.INTEGER,
     },
-    password: {
-      type: Sequelize.STRING,
-    },
-    profilePic: {
-      type: Sequelize.STRING,
-    },
-    savedVideos: {
-      type: Sequelize.STRING,
+    Processing: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: true,
     },
     createdAt: {
       allowNull: false,
@@ -45,15 +57,10 @@ const user = sequelize.define(
     timestamps: true,
     paranoid: true,
     freezeTableName: true,
-    tableName: "Users",
+    tableName: "Videos",
     sequelize,
-    modelName: "Users",
+    modelName: "Videos",
   }
 );
 
-user.hasMany(Video, { foreignKey: "UserID" });
-Video.belongsTo(user, {
-  foreignKey: "UserID",
-});
-
-module.exports = user;
+module.exports = video;

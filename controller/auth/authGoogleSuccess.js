@@ -14,39 +14,42 @@ const generateUsername = (email) => {
 const authGoogleSuccess = async (req, res) => {
   try {
     const user = req.user;
-    console.log(req.user);
 
-    const data = {
-      googleSub: user.id,
-      firstName: user.name.givenName,
-      lastName: user.name.familyName,
-      email: user.emails[0].value,
-      profilePic: user.photos[0].value,
-      username: generateUsername(user.emails[0].value),
-    };
+    if (user) {
+      const data = {
+        googleSub: user.id,
+        firstName: user.name.givenName,
+        lastName: user.name.familyName,
+        email: user.emails[0].value,
+        profilePic: user.photos[0].value,
+        username: generateUsername(user.emails[0].value),
+      };
 
-    let googleSub = data.googleSub;
-
-    // check that user exists
-    const userExists = await userModel.findOne({ where: { googleSub } });
-    console.log("hmmm->>>>>", userExists);
-    if (!userExists) {
-      const newUser = new userModel(data);
-      await newUser.save();
-      const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET);
-      return response(res, 200, "User logged in successfully", {
-        ...data,
-        token,
+      // check that user exists
+      const userExists = await userModel.findOne({
+        where: { googleSub: data.googleSub },
       });
+      if (!userExists) {
+        console.log("no");
+        const newUser = new userModel(data);
+        await newUser.save();
+        const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET);
+        return response(res, 200, "User logged in successfully", {
+          ...data,
+          token,
+        });
+      } else {
+        console.log("yes");
+        const token = jwt.sign({ id: userExists.id }, process.env.JWT_SECRET);
+        return response(res, 200, "User logged in successfully", {
+          ...data,
+          token,
+        });
+      }
     } else {
-      const token = jwt.sign({ id: userExists.id }, process.env.JWT_SECRET);
-      return response(res, 200, "User logged in successfully", {
-        ...data,
-        token,
-      });
+      return response(res, 400, "Internal server error");
     }
   } catch (error) {
-    console.log(error);
     return response(res, 500, "Internal server error", error);
   }
 };
