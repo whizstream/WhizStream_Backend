@@ -8,5 +8,6 @@ const requireAuth = require("../../middleware/auth/jwtverify");
 
 route.get("/getAll", videoController.getVideos);
 route.post("/upload", requireAuth, videoController.uploadVideo);
+route.post("/getMyVideos", requireAuth, videoController.getMyVideos);
 
 module.exports = route;
