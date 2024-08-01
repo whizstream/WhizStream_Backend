@@ -25,6 +25,7 @@ app.use(passport.session());
 app.use(
   cors({
     origin: [
+      "http://ec2-35-183-44-238.ca-central-1.compute.amazonaws.com",
       "https://whizstream.thenanjay.com",
       "http://youtubemini-build.s3-website.ca-central-1.amazonaws.com",
       "http://localhost:3000",
