@@ -6,6 +6,7 @@ const authController = require("../../controller/auth/authController");
 
 route.post("/register", authController.authRegister);
 route.post("/login", authController.authLogin);
+route.post("/login/google", authController.authGoogleLogin);
 
 // google oAuth
 route.get("/login/success", authController.authGoogleSuccess);
