@@ -12,8 +12,8 @@ const getVideos = async (req, res) => {
         attributes: ["username"],
       },
     });
-
-    return response(res, 200, "All videos", videos);
+    const filteredVideos = videos.filter((video) => video.dataValues.Processing === false);
+    return response(res, 200, "All videos", filteredVideos)
   } catch (err) {
     return response(res, 400, err.message);
   }
